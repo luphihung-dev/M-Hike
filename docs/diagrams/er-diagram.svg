@@ -1,0 +1,171 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" width="960" height="620">
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
+    .col  { font-size: 13px; fill: #1a1a1a; }
+    .type { font-size: 10.5px; fill: #6a6a6a; }
+    .req  { font-size: 10.5px; fill: #3a3a3a; font-weight: 600; }
+    .opt  { font-size: 10.5px; fill: #9a9a9a; }
+    .badge { font-size: 9px; font-weight: 700; fill: #1a1a1a; letter-spacing: 0.04em; }
+    .rule { stroke: #e8e4de; stroke-width: 1; }
+  </style>
+
+  <rect width="960" height="620" fill="#f8f6f3"/>
+
+  <text x="480" y="42" text-anchor="middle" fill="#1a1a1a" font-size="20" font-weight="700">M-Hike — Entity–Relationship Diagram</text>
+  <text x="480" y="66" text-anchor="middle" fill="#6a6a6a" font-size="12">SQLite · mhike.db · schema version 3</text>
+
+  <!-- ============================ hikes ============================ -->
+  <rect x="36" y="100" width="350" height="300" rx="12" fill="#ffffff" stroke="#4a4a4a" stroke-width="2.5"/>
+
+  <!-- two additional custom fields, tinted -->
+  <path d="M37,348 L385,348 L385,388 A12,12 0 0 1 373,400 L49,400 A12,12 0 0 1 37,388 Z" fill="#f4e4c1" opacity="0.5"/>
+
+  <path d="M36,112 A12,12 0 0 1 48,100 L374,100 A12,12 0 0 1 386,112 L386,140 L36,140 Z" fill="#a8c5e6"/>
+  <line x1="36" y1="140" x2="386" y2="140" stroke="#4a4a4a" stroke-width="2"/>
+  <text x="211" y="126" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1a1a">hikes</text>
+
+  <line class="rule" x1="37" y1="166" x2="385" y2="166"/>
+  <line class="rule" x1="37" y1="192" x2="385" y2="192"/>
+  <line class="rule" x1="37" y1="218" x2="385" y2="218"/>
+  <line class="rule" x1="37" y1="244" x2="385" y2="244"/>
+  <line class="rule" x1="37" y1="270" x2="385" y2="270"/>
+  <line class="rule" x1="37" y1="296" x2="385" y2="296"/>
+  <line class="rule" x1="37" y1="322" x2="385" y2="322"/>
+  <line class="rule" x1="37" y1="348" x2="385" y2="348"/>
+  <line class="rule" x1="37" y1="374" x2="385" y2="374"/>
+
+  <rect x="46" y="146" width="26" height="14" rx="4" fill="#f4e4c1" stroke="#4a4a4a" stroke-width="1"/>
+  <text class="badge" x="59" y="156.5" text-anchor="middle">PK</text>
+  <text class="col"  x="82"  y="157.5">_id</text>
+  <text class="type" x="216" y="157.5">INTEGER</text>
+  <text class="req"  text-anchor="end" x="372" y="157.5">AUTOINCREMENT</text>
+
+  <text class="col"  x="82"  y="183.5">name</text>
+  <text class="type" x="216" y="183.5">TEXT</text>
+  <text class="req"  text-anchor="end" x="372" y="183.5">NOT NULL</text>
+
+  <text class="col"  x="82"  y="209.5">location</text>
+  <text class="type" x="216" y="209.5">TEXT</text>
+  <text class="req"  text-anchor="end" x="372" y="209.5">NOT NULL</text>
+
+  <text class="col"  x="82"  y="235.5">hike_date</text>
+  <text class="type" x="216" y="235.5">TEXT</text>
+  <text class="req"  text-anchor="end" x="372" y="235.5">NOT NULL</text>
+
+  <text class="col"  x="82"  y="261.5">parking_available</text>
+  <text class="type" x="216" y="261.5">INTEGER</text>
+  <text class="req"  text-anchor="end" x="372" y="261.5">NOT NULL</text>
+
+  <text class="col"  x="82"  y="287.5">length_km</text>
+  <text class="type" x="216" y="287.5">REAL</text>
+  <text class="req"  text-anchor="end" x="372" y="287.5">NOT NULL</text>
+
+  <text class="col"  x="82"  y="313.5">difficulty</text>
+  <text class="type" x="216" y="313.5">TEXT</text>
+  <text class="req"  text-anchor="end" x="372" y="313.5">NOT NULL</text>
+
+  <text class="col"  x="82"  y="339.5">description</text>
+  <text class="type" x="216" y="339.5">TEXT</text>
+  <text class="opt"  text-anchor="end" x="372" y="339.5">NULL</text>
+
+  <text class="col"  x="82"  y="365.5">duration_hours</text>
+  <text class="type" x="216" y="365.5">REAL</text>
+  <text class="opt"  text-anchor="end" x="372" y="365.5">NULL</text>
+
+  <text class="col"  x="82"  y="391.5">terrain_type</text>
+  <text class="type" x="216" y="391.5">TEXT</text>
+  <text class="opt"  text-anchor="end" x="372" y="391.5">NULL</text>
+
+  <!-- ========================= observations ========================= -->
+  <rect x="574" y="152" width="350" height="196" rx="12" fill="#ffffff" stroke="#4a4a4a" stroke-width="2.5"/>
+
+  <path d="M574,164 A12,12 0 0 1 586,152 L912,152 A12,12 0 0 1 924,164 L924,192 L574,192 Z" fill="#9dd4c7"/>
+  <line x1="574" y1="192" x2="924" y2="192" stroke="#4a4a4a" stroke-width="2"/>
+  <text x="749" y="178" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1a1a">observations</text>
+
+  <line class="rule" x1="575" y1="218" x2="923" y2="218"/>
+  <line class="rule" x1="575" y1="244" x2="923" y2="244"/>
+  <line class="rule" x1="575" y1="270" x2="923" y2="270"/>
+  <line class="rule" x1="575" y1="296" x2="923" y2="296"/>
+  <line class="rule" x1="575" y1="322" x2="923" y2="322"/>
+
+  <rect x="584" y="198" width="26" height="14" rx="4" fill="#f4e4c1" stroke="#4a4a4a" stroke-width="1"/>
+  <text class="badge" x="597" y="208.5" text-anchor="middle">PK</text>
+  <text class="col"  x="620" y="209.5">_id</text>
+  <text class="type" x="754" y="209.5">INTEGER</text>
+  <text class="req"  text-anchor="end" x="910" y="209.5">AUTOINCREMENT</text>
+
+  <rect x="584" y="224" width="26" height="14" rx="4" fill="#9dd4c7" stroke="#4a4a4a" stroke-width="1"/>
+  <text class="badge" x="597" y="234.5" text-anchor="middle">FK</text>
+  <text class="col"  x="620" y="235.5">hike_id</text>
+  <text class="type" x="754" y="235.5">INTEGER</text>
+  <text class="req"  text-anchor="end" x="910" y="235.5">NOT NULL</text>
+
+  <text class="col"  x="620" y="261.5">observation</text>
+  <text class="type" x="754" y="261.5">TEXT</text>
+  <text class="req"  text-anchor="end" x="910" y="261.5">NOT NULL</text>
+
+  <text class="col"  x="620" y="287.5">observed_at</text>
+  <text class="type" x="754" y="287.5">TEXT</text>
+  <text class="req"  text-anchor="end" x="910" y="287.5">NOT NULL</text>
+
+  <text class="col"  x="620" y="313.5">comments</text>
+  <text class="type" x="754" y="313.5">TEXT</text>
+  <text class="opt"  text-anchor="end" x="910" y="313.5">NULL</text>
+
+  <text class="col"  x="620" y="339.5">photo_path</text>
+  <text class="type" x="754" y="339.5">TEXT</text>
+  <text class="opt"  text-anchor="end" x="910" y="339.5">NULL</text>
+
+  <!-- ========================= relationship ========================= -->
+  <path d="M386,153 H480 V231 H560" fill="none" stroke="#5a5a5a" stroke-width="2"/>
+
+  <!-- "one" bar on the hikes side -->
+  <line x1="402" y1="145" x2="402" y2="161" stroke="#5a5a5a" stroke-width="2"/>
+  <text x="402" y="138" text-anchor="middle" font-size="12" font-weight="600" fill="#5a5a5a">1</text>
+
+  <!-- crow's foot on the observations side -->
+  <path d="M560,231 L574,217 M560,231 L574,231 M560,231 L574,245" fill="none" stroke="#5a5a5a" stroke-width="2"/>
+  <text x="554" y="213" text-anchor="middle" font-size="12" font-weight="600" fill="#5a5a5a">N</text>
+
+  <rect x="404" y="181" width="152" height="22" rx="11" fill="#f8f6f3" stroke="#5a5a5a" stroke-width="1.5"/>
+  <text x="480" y="196" text-anchor="middle" font-size="10.5" font-weight="600" fill="#5a5a5a">ON DELETE CASCADE</text>
+
+  <text x="480" y="264" text-anchor="middle" font-size="11" fill="#6a6a6a">one hike · many observations</text>
+
+  <!-- ============================ legend ============================ -->
+  <rect x="36" y="428" width="330" height="160" rx="8" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.5"/>
+  <text x="52" y="452" font-size="13" font-weight="700" fill="#1a1a1a">Legend</text>
+
+  <rect x="52" y="465" width="26" height="14" rx="4" fill="#f4e4c1" stroke="#4a4a4a" stroke-width="1"/>
+  <text class="badge" x="65" y="475.5" text-anchor="middle">PK</text>
+  <text x="120" y="476" font-size="11" fill="#6a6a6a">Primary key · AUTOINCREMENT</text>
+
+  <rect x="52" y="489" width="26" height="14" rx="4" fill="#9dd4c7" stroke="#4a4a4a" stroke-width="1"/>
+  <text class="badge" x="65" y="499.5" text-anchor="middle">FK</text>
+  <text x="120" y="500" font-size="11" fill="#6a6a6a">Foreign key → hikes._id</text>
+
+  <text class="req" x="52" y="524">NOT NULL</text>
+  <text x="120" y="524" font-size="11" fill="#6a6a6a">compulsory field</text>
+
+  <text class="opt" x="52" y="548">NULL</text>
+  <text x="120" y="548" font-size="11" fill="#6a6a6a">optional field</text>
+
+  <rect x="52" y="561" width="26" height="14" rx="3" fill="#f4e4c1" opacity="0.5"/>
+  <rect x="52" y="561" width="26" height="14" rx="3" fill="none" stroke="#d8cfb8" stroke-width="1"/>
+  <text x="120" y="572" font-size="11" fill="#6a6a6a">additional custom field</text>
+
+  <!-- ============================= notes ============================= -->
+  <rect x="396" y="428" width="528" height="160" rx="8" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.5"/>
+  <text x="412" y="452" font-size="13" font-weight="700" fill="#1a1a1a">Notes</text>
+
+  <text x="412" y="475" font-size="10.5" fill="#3a3a3a">• The compulsory fields are enforced twice — the entry form validates them before the</text>
+  <text x="422" y="491" font-size="10.5" fill="#3a3a3a">confirmation dialogue, and the schema declares them NOT NULL.</text>
+
+  <text x="412" y="514" font-size="10.5" fill="#3a3a3a">• duration_hours and terrain_type are the two additional custom fields in the brief.</text>
+
+  <text x="412" y="537" font-size="10.5" fill="#3a3a3a">• Foreign-key enforcement is switched on in HikeDatabaseHelper.onConfigure(), so</text>
+  <text x="422" y="553" font-size="10.5" fill="#3a3a3a">deleting a hike also deletes its observations — no orphan rows can exist.</text>
+
+  <text x="412" y="577" font-size="10.5" fill="#3a3a3a">• photo_path stores only a file path; the image itself is never held in the database.</text>
+</svg>

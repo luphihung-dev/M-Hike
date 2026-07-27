@@ -101,6 +101,14 @@ the UI code.
 </p>
 </details>
 
+<details>
+<summary><b>Entity-relationship diagram</b></summary>
+<br/>
+<p align="center">
+  <img src="docs/diagrams/er-diagram.png" width="820" alt="M-Hike entity-relationship diagram" />
+</p>
+</details>
+
 - Activities never touch SQL directly — all queries live in two DAO classes
   behind a shared `SQLiteOpenHelper`
 - Hikes and observations are linked with a foreign key and `ON DELETE CASCADE`
