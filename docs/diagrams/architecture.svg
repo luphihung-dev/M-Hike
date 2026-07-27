@@ -3,7 +3,7 @@
     text { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif; }
   </style>
   <defs>
-    <marker id="arrow-claude" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+    <marker id="arrow-head" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
       <polygon points="0 0, 8 4, 0 8" fill="#5a5a5a"/>
     </marker>
   </defs>
@@ -13,10 +13,10 @@
   <rect x="32" y="64" width="896" height="210" rx="12" fill="none" stroke="#4a4a4a" stroke-width="1" stroke-dasharray="6,4"/>
   <text x="48" y="88" font-size="12" font-weight="600" letter-spacing="0.08em" fill="#6a6a6a">UI · ACTIVITIES</text>
 
-  <path d="M510,162 L560,162 L560,106 L676,106" fill="none" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-claude)"/>
-  <path d="M510,174 L600,174 L600,168 L676,168" fill="none" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-claude)"/>
-  <path d="M510,186 L580,186 L580,230 L676,230" fill="none" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-claude)"/>
-  <line x1="250" y1="174" x2="326" y2="174" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-claude)"/>
+  <path d="M510,162 L560,162 L560,106 L676,106" fill="none" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-head)"/>
+  <path d="M510,174 L600,174 L600,168 L676,168" fill="none" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-head)"/>
+  <path d="M510,186 L580,186 L580,230 L676,230" fill="none" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-head)"/>
+  <line x1="250" y1="174" x2="326" y2="174" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-head)"/>
   <text x="288" y="164" font-size="11" fill="#5a5a5a" text-anchor="middle">Get started</text>
   <text x="618" y="97" font-size="11" fill="#5a5a5a" text-anchor="middle">FAB · add hike</text>
   <text x="638" y="159" font-size="11" fill="#5a5a5a" text-anchor="middle">tap a card</text>
@@ -42,7 +42,7 @@
   <text x="790" y="225" font-size="16" font-weight="600" fill="#1a1a1a" text-anchor="middle">SearchActivity</text>
   <text x="790" y="243" font-size="12" fill="#3a3a3a" text-anchor="middle">live search · filters</text>
 
-  <line x1="480" y1="274" x2="480" y2="314" stroke="#5a5a5a" stroke-width="2" marker-end="url(#arrow-claude)"/>
+  <line x1="480" y1="274" x2="480" y2="314" stroke="#5a5a5a" stroke-width="2" marker-end="url(#arrow-head)"/>
   <text x="494" y="298" font-size="13" fill="#5a5a5a">CRUD calls</text>
 
   <rect x="32" y="318" width="896" height="112" rx="12" fill="none" stroke="#4a4a4a" stroke-width="1" stroke-dasharray="6,4"/>
@@ -60,9 +60,9 @@
   <text x="770" y="380" font-size="16" font-weight="600" fill="#1a1a1a" text-anchor="middle">HikeDatabaseHelper</text>
   <text x="770" y="398" font-size="12" fill="#3a3a3a" text-anchor="middle">schema · migrations</text>
 
-  <path d="M200,410 L200,448 L420,448 L420,462" fill="none" stroke="#5a5a5a" stroke-width="2" marker-end="url(#arrow-claude)"/>
-  <line x1="475" y1="410" x2="475" y2="462" stroke="#5a5a5a" stroke-width="2" marker-end="url(#arrow-claude)"/>
-  <path d="M770,410 L770,448 L540,448 L540,462" fill="none" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-claude)"/>
+  <path d="M200,410 L200,448 L420,448 L420,462" fill="none" stroke="#5a5a5a" stroke-width="2" marker-end="url(#arrow-head)"/>
+  <line x1="475" y1="410" x2="475" y2="462" stroke="#5a5a5a" stroke-width="2" marker-end="url(#arrow-head)"/>
+  <path d="M770,410 L770,448 L540,448 L540,462" fill="none" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-head)"/>
   <text x="655" y="441" font-size="11" fill="#5a5a5a" text-anchor="middle">onCreate · onUpgrade</text>
 
   <ellipse cx="480" cy="478" rx="110" ry="14" fill="#e8e6e3" stroke="#4a4a4a" stroke-width="2"/>
@@ -76,8 +76,8 @@
 
   <rect x="700" y="536" width="240" height="68" rx="8" fill="#ffffff" stroke="#4a4a4a" stroke-width="1.5"/>
   <text x="715" y="558" fill="#1a1a1a" font-size="13" font-weight="600">Legend</text>
-  <line x1="715" y1="576" x2="745" y2="576" stroke="#5a5a5a" stroke-width="2" marker-end="url(#arrow-claude)"/>
+  <line x1="715" y1="576" x2="745" y2="576" stroke="#5a5a5a" stroke-width="2" marker-end="url(#arrow-head)"/>
   <text x="755" y="580" fill="#6a6a6a" font-size="12">data access</text>
-  <line x1="715" y1="594" x2="745" y2="594" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-claude)"/>
+  <line x1="715" y1="594" x2="745" y2="594" stroke="#5a5a5a" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow-head)"/>
   <text x="755" y="598" fill="#6a6a6a" font-size="12">navigation · setup</text>
 </svg>
