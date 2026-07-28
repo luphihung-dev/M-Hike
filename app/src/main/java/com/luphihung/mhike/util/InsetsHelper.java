@@ -21,6 +21,9 @@ public final class InsetsHelper {
     /** A covered strip smaller than this fraction of the window is not a keyboard. */
     private static final int KEYBOARD_MIN_FRACTION = 5;
 
+    /** Temporary: identifies the measurements written while diagnosing the keyboard. */
+    private static final String DIAGNOSTIC_TAG = "MHikeKeyboard";
+
     private InsetsHelper() {
         // Utility class; not meant to be instantiated.
     }
@@ -55,8 +58,19 @@ public final class InsetsHelper {
      * distance is worked out and scrolled explicitly.
      */
     public static void applyFormInsets(View root, NestedScrollView form) {
-        applySystemBarPadding(root);
         form.setClipToPadding(false);
+
+        // One listener only: setting a second one would replace this.
+        ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
+            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
+                    | WindowInsetsCompat.Type.displayCutout());
+            view.setPadding(bars.left, 0, bars.right, bars.bottom);
+            Insets keyboard = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
+            android.util.Log.d(DIAGNOSTIC_TAG, "insets: ime=" + keyboard.bottom
+                    + " imeVisible=" + windowInsets.isVisible(WindowInsetsCompat.Type.ime())
+                    + " navBar=" + bars.bottom);
+            return windowInsets;
+        });
 
         // Only react when the keyboard opens or the user moves to another field,
         // otherwise scrolling would retrigger this listener and loop.
@@ -69,6 +83,13 @@ public final class InsetsHelper {
             int windowHeight = root.getRootView().getHeight();
             int covered = windowHeight - visible.bottom;
             boolean keyboardOpen = covered > windowHeight / KEYBOARD_MIN_FRACTION;
+            android.util.Log.d(DIAGNOSTIC_TAG, "layout: windowHeight=" + windowHeight
+                    + " visibleBottom=" + visible.bottom + " covered=" + covered
+                    + " rootHeight=" + root.getHeight()
+                    + " formHeight=" + form.getHeight()
+                    + " scrollY=" + form.getScrollY()
+                    + " focused=" + (form.findFocus() == null ? "none"
+                            : form.findFocus().getClass().getSimpleName()));
 
             int wanted = keyboardOpen ? covered : 0;
             if (form.getPaddingBottom() != wanted) {
