@@ -17,12 +17,24 @@ public final class InsetsHelper {
         // Utility class; not meant to be instantiated.
     }
 
-    /** Keeps the given root view clear of the navigation bar and display cutouts. */
+    /**
+     * Keeps the given root view clear of the navigation bar, display cutouts
+     * and the on-screen keyboard.
+     *
+     * <p>Edge-to-edge windows are not resized by adjustResize on their own, so
+     * the keyboard inset has to be applied here as well. Without it the window
+     * keeps its full height and the keyboard simply covers whatever sits at the
+     * bottom of the screen — on the hike form that is the description field and
+     * the save button. Taking the larger of the two insets avoids padding twice
+     * when the keyboard is already taller than the navigation bar.
+     */
     public static void applySystemBarPadding(View root) {
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
             Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
                     | WindowInsetsCompat.Type.displayCutout());
-            view.setPadding(bars.left, 0, bars.right, bars.bottom);
+            Insets keyboard = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
+            view.setPadding(bars.left, 0, bars.right,
+                    Math.max(bars.bottom, keyboard.bottom));
             return windowInsets;
         });
     }
