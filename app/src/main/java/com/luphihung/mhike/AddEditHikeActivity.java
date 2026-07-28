@@ -75,7 +75,8 @@ public class AddEditHikeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_hike);
-        InsetsHelper.applySystemBarPadding(findViewById(R.id.root_layout));
+        InsetsHelper.applyFormInsets(findViewById(R.id.root_layout),
+                findViewById(R.id.form_scroll));
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
