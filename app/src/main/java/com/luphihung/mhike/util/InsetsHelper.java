@@ -1,6 +1,5 @@
 package com.luphihung.mhike.util;
 
-import android.graphics.Rect;
 import android.view.View;
 
 import androidx.core.graphics.Insets;
@@ -15,8 +14,14 @@ import androidx.core.widget.NestedScrollView;
  */
 public final class InsetsHelper {
 
-    /** Gap left between the focused field and whatever covers the form, in dp. */
-    private static final int BREATHING_ROOM_DP = 16;
+    /** Space kept between the app bar and the field being edited, in dp. */
+    private static final int FIELD_TOP_MARGIN_DP = 8;
+
+    /** Scratch space added below the form so the last fields can reach the top, in dp. */
+    private static final int SCROLL_HEADROOM_DP = 320;
+
+    /** Long enough for the keyboard to have finished sliding up, in milliseconds. */
+    private static final int KEYBOARD_SETTLE_MS = 300;
 
     private InsetsHelper() {
         // Utility class; not meant to be instantiated.
@@ -33,63 +38,68 @@ public final class InsetsHelper {
     }
 
     /**
-     * Same as {@link #applySystemBarPadding(View)}, but also keeps the field the
-     * user is typing in on screen.
+     * Scrolls a field to the top of the form when it is tapped, so the keyboard
+     * cannot cover what is being typed.
      *
-     * <p>Nothing here tries to work out whether a keyboard is open, because both
-     * of the usual signals read as zero on this screen: the decor consumes the
-     * keyboard inset before a listener on the layout can see it, and comparing
-     * the visible frame against the root view is self-cancelling whenever the
-     * window really is resized, since the root shrinks by the same amount.
+     * <p>Nothing here measures the keyboard. Earlier attempts did, and on this
+     * screen every signal reads as nothing: the decor consumes the keyboard
+     * inset before a listener on the layout can see it, and comparing the
+     * visible frame against the root view cancels itself out when the window is
+     * resized, because the root shrinks by the same amount. Focus, on the other
+     * hand, is unambiguous — the field the user tapped is the field to show.
      *
-     * <p>The question that can always be answered is the useful one anyway — is
-     * the focused field below the visible area? If it is, that is exactly how
-     * far to scroll, whatever is covering it. Room to scroll comes from padding
-     * the form by however much of it falls outside the visible area, with
-     * clipping turned off.
+     * <p>Moving a field to the top needs somewhere to scroll to, so headroom is
+     * added below the form while a field is being edited and taken away again
+     * afterwards. The scroll is delayed until the keyboard has finished sliding
+     * up, otherwise it would be measured against a screen that is still moving.
      */
-    public static void applyFormInsets(View root, NestedScrollView form) {
-        applySystemBarPadding(root);
-        form.setClipToPadding(false);
+    public static void keepFocusedFieldVisible(NestedScrollView form, View... fields) {
+        View content = form.getChildAt(0);
+        if (content == null) {
+            return;
+        }
+        float density = form.getResources().getDisplayMetrics().density;
+        int headroom = (int) (SCROLL_HEADROOM_DP * density);
+        int topMargin = (int) (FIELD_TOP_MARGIN_DP * density);
+        int restingBottom = content.getPaddingBottom();
 
-        // Scrolling triggers another layout pass, so remember what has already
-        // been handled rather than reacting to every one of them.
-        final View[] handledField = {null};
-        final int[] handledAtBottom = {0};
-
-        root.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
-            Rect visible = new Rect();
-            root.getWindowVisibleDisplayFrame(visible);
-
-            int[] formAt = new int[2];
-            form.getLocationOnScreen(formAt);
-            int formBelowFold = Math.max(0, formAt[1] + form.getHeight() - visible.bottom);
-            if (form.getPaddingBottom() != formBelowFold) {
-                form.setPadding(form.getPaddingLeft(), form.getPaddingTop(),
-                        form.getPaddingRight(), formBelowFold);
-                return; // that change lays out again; act on the next pass
+        for (View field : fields) {
+            if (field == null) {
+                continue;
             }
+            field.setOnFocusChangeListener((view, hasFocus) -> {
+                if (!hasFocus) {
+                    // Drop the headroom once nothing on the form is being edited.
+                    form.post(() -> {
+                        if (form.findFocus() == null) {
+                            setBottomPadding(content, restingBottom);
+                        }
+                    });
+                    return;
+                }
+                setBottomPadding(content, restingBottom + headroom);
+                view.postDelayed(() -> form.smoothScrollTo(0,
+                        Math.max(0, distanceIntoForm(view, form) - topMargin)),
+                        KEYBOARD_SETTLE_MS);
+            });
+        }
+    }
 
-            View focused = form.findFocus();
-            if (focused == null) {
-                handledField[0] = null;
-                return;
-            }
-            if (focused == handledField[0] && visible.bottom == handledAtBottom[0]) {
-                return; // already dealt with this field at this size
-            }
-            handledField[0] = focused;
-            handledAtBottom[0] = visible.bottom;
+    /** Distance from the top of the scrolling content down to this view. */
+    private static int distanceIntoForm(View view, NestedScrollView form) {
+        int distance = 0;
+        View step = view;
+        while (step != null && step != form) {
+            distance += step.getTop();
+            step = step.getParent() instanceof View ? (View) step.getParent() : null;
+        }
+        return distance;
+    }
 
-            int[] focusedAt = new int[2];
-            focused.getLocationOnScreen(focusedAt);
-            float density = form.getResources().getDisplayMetrics().density;
-            int hiddenBy = focusedAt[1] + focused.getHeight()
-                    + (int) (BREATHING_ROOM_DP * density) - visible.bottom;
-
-            if (hiddenBy > 0) {
-                form.post(() -> form.smoothScrollBy(0, hiddenBy));
-            }
-        });
+    private static void setBottomPadding(View view, int bottom) {
+        if (view.getPaddingBottom() != bottom) {
+            view.setPadding(view.getPaddingLeft(), view.getPaddingTop(),
+                    view.getPaddingRight(), bottom);
+        }
     }
 }

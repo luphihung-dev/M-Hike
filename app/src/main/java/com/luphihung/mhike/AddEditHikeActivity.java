@@ -75,8 +75,7 @@ public class AddEditHikeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_hike);
-        InsetsHelper.applyFormInsets(findViewById(R.id.root_layout),
-                findViewById(R.id.form_scroll));
+        InsetsHelper.applySystemBarPadding(findViewById(R.id.root_layout));
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -84,6 +83,8 @@ public class AddEditHikeActivity extends AppCompatActivity {
 
         hikeDao = new HikeDao(this);
         bindViews();
+        InsetsHelper.keepFocusedFieldVisible(findViewById(R.id.form_scroll),
+                nameInput, locationInput, lengthInput, durationInput, descriptionInput);
         setUpDropdowns();
         setUpDatePicker();
         setUpValidationReset();
