@@ -15,14 +15,8 @@ import androidx.core.widget.NestedScrollView;
  */
 public final class InsetsHelper {
 
-    /** Gap left between the focused field and the top of the keyboard, in dp. */
+    /** Gap left between the focused field and whatever covers the form, in dp. */
     private static final int BREATHING_ROOM_DP = 16;
-
-    /** A covered strip smaller than this fraction of the window is not a keyboard. */
-    private static final int KEYBOARD_MIN_FRACTION = 5;
-
-    /** Temporary: identifies the measurements written while diagnosing the keyboard. */
-    private static final String DIAGNOSTIC_TAG = "MHikeKeyboard";
 
     private InsetsHelper() {
         // Utility class; not meant to be instantiated.
@@ -39,88 +33,63 @@ public final class InsetsHelper {
     }
 
     /**
-     * Same as {@link #applySystemBarPadding(View)}, but also lifts the field the
-     * user is typing in above the keyboard.
+     * Same as {@link #applySystemBarPadding(View)}, but also keeps the field the
+     * user is typing in on screen.
      *
-     * <p>The keyboard is found by measuring the window rather than by reading a
-     * WindowInsets value. The activity never opts the window out of fitting the
-     * system windows, so the decor consumes the keyboard inset before any
-     * listener here could see it and it always reads as absent. The visible
-     * display frame reports the strip the keyboard covers whichever way the
-     * window is set up.
+     * <p>Nothing here tries to work out whether a keyboard is open, because both
+     * of the usual signals read as zero on this screen: the decor consumes the
+     * keyboard inset before a listener on the layout can see it, and comparing
+     * the visible frame against the root view is self-cancelling whenever the
+     * window really is resized, since the root shrinks by the same amount.
      *
-     * <p>Two things then have to happen. The scrolling view is laid out by the
-     * app bar's scrolling behaviour, which measures it against the height of the
-     * whole CoordinatorLayout, so its visible area never shrinks: bottom padding
-     * inside it, with clipping turned off, is what creates room to scroll the
-     * last fields up. And nothing scrolls on its own, because the field still
-     * counts as on screen with the keyboard merely drawn over it, so the
-     * distance is worked out and scrolled explicitly.
+     * <p>The question that can always be answered is the useful one anyway — is
+     * the focused field below the visible area? If it is, that is exactly how
+     * far to scroll, whatever is covering it. Room to scroll comes from padding
+     * the form by however much of it falls outside the visible area, with
+     * clipping turned off.
      */
     public static void applyFormInsets(View root, NestedScrollView form) {
+        applySystemBarPadding(root);
         form.setClipToPadding(false);
 
-        // One listener only: setting a second one would replace this.
-        ViewCompat.setOnApplyWindowInsetsListener(root, (view, windowInsets) -> {
-            Insets bars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars()
-                    | WindowInsetsCompat.Type.displayCutout());
-            view.setPadding(bars.left, 0, bars.right, bars.bottom);
-            Insets keyboard = windowInsets.getInsets(WindowInsetsCompat.Type.ime());
-            android.util.Log.d(DIAGNOSTIC_TAG, "insets: ime=" + keyboard.bottom
-                    + " imeVisible=" + windowInsets.isVisible(WindowInsetsCompat.Type.ime())
-                    + " navBar=" + bars.bottom);
-            return windowInsets;
-        });
-
-        // Only react when the keyboard opens or the user moves to another field,
-        // otherwise scrolling would retrigger this listener and loop.
-        final boolean[] keyboardWasOpen = {false};
-        final View[] lastFocused = {null};
+        // Scrolling triggers another layout pass, so remember what has already
+        // been handled rather than reacting to every one of them.
+        final View[] handledField = {null};
+        final int[] handledAtBottom = {0};
 
         root.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
             Rect visible = new Rect();
             root.getWindowVisibleDisplayFrame(visible);
-            int windowHeight = root.getRootView().getHeight();
-            int covered = windowHeight - visible.bottom;
-            boolean keyboardOpen = covered > windowHeight / KEYBOARD_MIN_FRACTION;
-            android.util.Log.d(DIAGNOSTIC_TAG, "layout: windowHeight=" + windowHeight
-                    + " visibleBottom=" + visible.bottom + " covered=" + covered
-                    + " rootHeight=" + root.getHeight()
-                    + " formHeight=" + form.getHeight()
-                    + " scrollY=" + form.getScrollY()
-                    + " focused=" + (form.findFocus() == null ? "none"
-                            : form.findFocus().getClass().getSimpleName()));
 
-            int wanted = keyboardOpen ? covered : 0;
-            if (form.getPaddingBottom() != wanted) {
+            int[] formAt = new int[2];
+            form.getLocationOnScreen(formAt);
+            int formBelowFold = Math.max(0, formAt[1] + form.getHeight() - visible.bottom);
+            if (form.getPaddingBottom() != formBelowFold) {
                 form.setPadding(form.getPaddingLeft(), form.getPaddingTop(),
-                        form.getPaddingRight(), wanted);
+                        form.getPaddingRight(), formBelowFold);
+                return; // that change lays out again; act on the next pass
             }
 
             View focused = form.findFocus();
-            boolean movedField = focused != lastFocused[0];
-            if (keyboardOpen && (!keyboardWasOpen[0] || movedField)) {
-                liftAbove(form, focused, visible.bottom);
+            if (focused == null) {
+                handledField[0] = null;
+                return;
             }
-            keyboardWasOpen[0] = keyboardOpen;
-            lastFocused[0] = focused;
+            if (focused == handledField[0] && visible.bottom == handledAtBottom[0]) {
+                return; // already dealt with this field at this size
+            }
+            handledField[0] = focused;
+            handledAtBottom[0] = visible.bottom;
+
+            int[] focusedAt = new int[2];
+            focused.getLocationOnScreen(focusedAt);
+            float density = form.getResources().getDisplayMetrics().density;
+            int hiddenBy = focusedAt[1] + focused.getHeight()
+                    + (int) (BREATHING_ROOM_DP * density) - visible.bottom;
+
+            if (hiddenBy > 0) {
+                form.post(() -> form.smoothScrollBy(0, hiddenBy));
+            }
         });
-    }
-
-    /** Scrolls the form so the focused field sits above the given screen line. */
-    private static void liftAbove(NestedScrollView form, View focused, int keyboardTop) {
-        if (focused == null) {
-            return;
-        }
-        int[] focusedAt = new int[2];
-        focused.getLocationOnScreen(focusedAt);
-
-        float density = form.getResources().getDisplayMetrics().density;
-        int gap = (int) (BREATHING_ROOM_DP * density);
-        int hiddenBy = focusedAt[1] + focused.getHeight() + gap - keyboardTop;
-
-        if (hiddenBy > 0) {
-            form.post(() -> form.smoothScrollBy(0, hiddenBy));
-        }
     }
 }
