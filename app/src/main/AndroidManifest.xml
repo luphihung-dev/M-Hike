@@ -54,11 +54,14 @@
             android:name=".HikeDetailActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
+        <!-- Panned rather than resized: the window is drawn edge-to-edge, which
+             leaves adjustResize with nothing to shrink, so the keyboard would
+             simply cover the description field at the bottom of the form. -->
         <activity
             android:name=".AddEditHikeActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustPan" />
     </application>
 
 </manifest>

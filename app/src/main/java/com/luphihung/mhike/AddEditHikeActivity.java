@@ -83,8 +83,6 @@ public class AddEditHikeActivity extends AppCompatActivity {
 
         hikeDao = new HikeDao(this);
         bindViews();
-        InsetsHelper.keepFocusedFieldVisible(findViewById(R.id.form_scroll),
-                nameInput, locationInput, lengthInput, durationInput, descriptionInput);
         setUpDropdowns();
         setUpDatePicker();
         setUpValidationReset();
